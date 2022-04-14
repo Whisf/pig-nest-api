@@ -9,7 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          type: 'postgres',
+          type: 'mysql',
           host: configService.get<string>('DB_HOST'),
           port: configService.get<number>('DB_PORT'),
           username: configService.get<string>('DB_USERNAME'),
