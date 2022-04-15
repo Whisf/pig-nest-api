@@ -1,3 +1,5 @@
 export * from './user.entity'
 export * from './task.entity'
 export * from './task-result.entity'
+export * from './category-expense.entity'
+export * from './expense-today.entity'

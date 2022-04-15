@@ -1,5 +1,7 @@
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm'
 import { Base } from './common/base'
+import { ExpenseToday } from './expense-today.entity'
+import { TaskResult } from './task-result.entity'
 import { Task } from './task.entity'
 
 @Entity('user')
@@ -12,10 +14,10 @@ export class User extends Base {
   constructor() {
     super()
   }
-  @Column()
+  @Column({ nullable: false })
   public username: string
 
-  @Column()
+  @Column({ default: true })
   public isAvaiable: boolean
 
   @TreeParent({ onDelete: 'SET NULL' })
@@ -24,6 +26,12 @@ export class User extends Base {
   @TreeChildren()
   public children: User[]
 
-  // @OneToMany(() => Task, (task: Task) => task.user, { onDelete: 'CASCADE' })
-  // public task: Task[]
+  @OneToMany(() => Task, (task: Task) => task.user)
+  public task: Task[]
+
+  @OneToMany(() => TaskResult, (taskResult: TaskResult) => taskResult.user)
+  public taskResult: TaskResult[]
+
+  @OneToMany(() => ExpenseToday, (expenseToday: ExpenseToday) => expenseToday.user)
+  public expenseToday: ExpenseToday
 }
