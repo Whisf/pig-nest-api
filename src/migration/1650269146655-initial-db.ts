@@ -1,11 +1,13 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class migrationV51649997533767 implements MigrationInterface {
-    name = 'migrationV51649997533767'
+export class initialDb1650269146655 implements MigrationInterface {
+    name = 'initialDb1650269146655'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`DROP INDEX \`createAt_index\` ON \`task\``);
         await queryRunner.query(`DROP INDEX \`FK_f316d3fe53497d4d8a2957db8b9\` ON \`task\``);
         await queryRunner.query(`DROP INDEX \`FK_bf4c4684714075ba8d15635dd99\` ON \`task_result\``);
+        await queryRunner.query(`DROP INDEX \`createAt\` ON \`expense_today\``);
         await queryRunner.query(`DROP INDEX \`FK_62e08fd8369c95c4129eca36bd5\` ON \`expense_today\``);
         await queryRunner.query(`DROP INDEX \`FK_8ee01a3fbc282f32d3d880ad705\` ON \`expense_today\``);
         await queryRunner.query(`ALTER TABLE \`task\` CHANGE \`userId\` \`userId\` int NULL`);
@@ -25,8 +27,10 @@ export class migrationV51649997533767 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`task\` CHANGE \`userId\` \`userId\` int NOT NULL`);
         await queryRunner.query(`CREATE INDEX \`FK_8ee01a3fbc282f32d3d880ad705\` ON \`expense_today\` (\`userId\`)`);
         await queryRunner.query(`CREATE INDEX \`FK_62e08fd8369c95c4129eca36bd5\` ON \`expense_today\` (\`categoryId\`)`);
+        await queryRunner.query(`CREATE INDEX \`createAt\` ON \`expense_today\` (\`createAt\`)`);
         await queryRunner.query(`CREATE INDEX \`FK_bf4c4684714075ba8d15635dd99\` ON \`task_result\` (\`userId\`)`);
         await queryRunner.query(`CREATE INDEX \`FK_f316d3fe53497d4d8a2957db8b9\` ON \`task\` (\`userId\`)`);
+        await queryRunner.query(`CREATE INDEX \`createAt_index\` ON \`task\` (\`createAt\`)`);
     }
 
 }

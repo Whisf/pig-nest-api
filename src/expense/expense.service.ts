@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { ExpenseToday } from 'src/entities'
+import { CategoryExpense, ExpenseToday } from 'src/entities'
 import { Connection } from 'typeorm'
 import { CreateExpenseDto } from './dto/create-expense.dto'
 import { UpdateExpenseDto } from './dto/update-expense.dto'
@@ -7,19 +7,45 @@ import { UpdateExpenseDto } from './dto/update-expense.dto'
 @Injectable()
 export class ExpenseService {
   constructor(private connection: Connection) {}
-  create(createExpenseDto: CreateExpenseDto) {
-    return `This action creates new expense`
+  async create(createExpenseDto: CreateExpenseDto) {
+    return await this.connection.transaction(async (manager) => {
+      const { category, ...rest } = createExpenseDto
+      let existingCategory = await manager.findOne(CategoryExpense, { where: { title: createExpenseDto.category } })
+      if (!existingCategory) {
+        existingCategory = await manager.save(CategoryExpense, { title: category })
+      }
+      return await manager.save(ExpenseToday, {
+        ...rest,
+        category: { id: existingCategory.id },
+      })
+    })
   }
 
-  findAll(): Promise<ExpenseToday[]> {
+  async findAll(): Promise<ExpenseToday[]> {
+    const date = new Date()
+    console.log(date)
+    const existingExpense = await this.connection.manager.find(ExpenseToday, {
+      where: {
+        createAt: date,
+      },
+    })
+    console.log(existingExpense)
     return this.connection.manager.find(ExpenseToday)
   }
 
-  findOne(id: number): Promise<ExpenseToday> {
-    return this.connection.manager.findOne(ExpenseToday, { where: { id: id } })
+  async findOne(id: number): Promise<any> {
+
+    return this.connection.manager.createQueryBuilder()
+
+    return await this.connection.manager
+      .createQueryBuilder(ExpenseToday, 'ex')
+      .innerJoinAndSelect('ex.category', 'category')
+      .where('ex.id = :id', { id: id })
+      .getOne()
   }
 
   update(id: number, updateExpenseDto: UpdateExpenseDto) {
+    console.log(updateExpenseDto)
     return `This action updates a #${id} expense`
   }
 
