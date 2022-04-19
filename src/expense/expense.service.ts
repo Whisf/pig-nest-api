@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { CategoryExpense, ExpenseToday } from 'src/entities'
 
 import { Connection } from 'typeorm'
@@ -23,21 +23,10 @@ export class ExpenseService {
   }
 
   async findAll(): Promise<ExpenseToday[]> {
-    const date = new Date()
-    console.log(date)
-    const existingExpense = await this.connection.manager.find(ExpenseToday, {
-      where: {
-        createAt: date,
-      },
-    })
-    console.log(existingExpense)
     return this.connection.manager.find(ExpenseToday)
   }
 
-  async findOne(id: number): Promise<any> {
-
-    return this.connection.manager.createQueryBuilder()
-
+  async findExpenseWithCategory(id: number): Promise<any> {
     return await this.connection.manager
       .createQueryBuilder(ExpenseToday, 'ex')
       .innerJoinAndSelect('ex.category', 'category')
@@ -45,11 +34,47 @@ export class ExpenseService {
       .getOne()
   }
 
+  findOne(id: number): Promise<ExpenseToday> {
+    return this.connection.manager.findOneOrFail(ExpenseToday, { where: { id: id } })
+  }
+
   update(id: number, updateExpenseDto: UpdateExpenseDto) {
-    return `This action updates a #${id} expense`
+    return this.connection.transaction(async (manager) => {
+      const { category, detail, total } = updateExpenseDto
+      const existingExpense = await this.findOne(id)
+      if (!existingExpense) {
+        throw new BadRequestException('Not found Expense')
+      }
+
+      if (category) {
+        const existingCategory = await manager.findOne(CategoryExpense, { where: { title: category } })
+        if (!existingCategory) {
+          throw new BadRequestException(`Not Found Category ${category}`)
+        }
+        await manager.save(CategoryExpense, { id: id, category: { id: existingCategory.id } })
+      }
+
+      if (detail) {
+        await manager.save(CategoryExpense, { id: id, detail: detail })
+      }
+
+      if (total) {
+        await manager.save(CategoryExpense, { id: id, total: total })
+      }
+
+      return existingExpense
+    })
   }
 
   remove(id: number) {
-    return `This action removes a #${id} expense`
+    return this.connection.manager.delete(ExpenseToday, id)
+  }
+
+  async createCategory(categoryTitle: string): Promise<CategoryExpense> {
+    const existingCategory = await this.connection.manager.findOne(CategoryExpense, { where: { title: categoryTitle } })
+    if (!!existingCategory) {
+      throw new BadRequestException('Category is existed!')
+    }
+    return this.connection.manager.save(CategoryExpense, { title: categoryTitle })
   }
 }
