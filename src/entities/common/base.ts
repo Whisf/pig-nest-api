@@ -1,12 +1,12 @@
-import { Column, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm'
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 export class Base {
   @PrimaryGeneratedColumn()
-  public id: string
+  public id: number
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn()
   public createAt: Date
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn()
   public updateAt: Date
 }
