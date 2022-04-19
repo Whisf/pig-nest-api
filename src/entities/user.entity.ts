@@ -17,6 +17,9 @@ export class User extends Base {
   @Column({ nullable: false })
   public username: string
 
+  @Column({ nullable: false })
+  public email: string
+
   @Column({ default: true })
   public isAvaiable: boolean
 
