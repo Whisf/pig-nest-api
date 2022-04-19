@@ -1,0 +1,20 @@
+import {MigrationInterface, QueryRunner} from "typeorm";
+
+export class migrationV31649996828288 implements MigrationInterface {
+    name = 'migrationV31649996828288'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`expense_today\` DROP FOREIGN KEY \`FK_62e08fd8369c95c4129eca36bd5\``);
+        await queryRunner.query(`DROP INDEX \`IDX_62e08fd8369c95c4129eca36bd\` ON \`expense_today\``);
+        await queryRunner.query(`DROP INDEX \`REL_62e08fd8369c95c4129eca36bd\` ON \`expense_today\``);
+        await queryRunner.query(`ALTER TABLE \`expense_today\` ADD CONSTRAINT \`FK_62e08fd8369c95c4129eca36bd5\` FOREIGN KEY (\`categoryId\`) REFERENCES \`category_expense\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`expense_today\` DROP FOREIGN KEY \`FK_62e08fd8369c95c4129eca36bd5\``);
+        await queryRunner.query(`CREATE UNIQUE INDEX \`REL_62e08fd8369c95c4129eca36bd\` ON \`expense_today\` (\`categoryId\`)`);
+        await queryRunner.query(`CREATE UNIQUE INDEX \`IDX_62e08fd8369c95c4129eca36bd\` ON \`expense_today\` (\`categoryId\`)`);
+        await queryRunner.query(`ALTER TABLE \`expense_today\` ADD CONSTRAINT \`FK_62e08fd8369c95c4129eca36bd5\` FOREIGN KEY (\`categoryId\`) REFERENCES \`category_expense\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+}

@@ -7,7 +7,7 @@ import { UpdateExpenseDto } from './dto/update-expense.dto'
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
-  @Post('/create')
+  @Get('/create')
   create(@Body() createExpenseDto: CreateExpenseDto) {
     return this.expenseService.create(createExpenseDto)
   }
@@ -17,7 +17,8 @@ export class ExpenseController {
     return this.expenseService.findAll()
   }
 
-  @Get('/:id')
+
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.expenseService.findOne(+id)
   }

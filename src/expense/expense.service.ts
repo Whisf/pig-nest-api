@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { CategoryExpense, ExpenseToday } from 'src/entities'
+
 import { Connection } from 'typeorm'
 import { CreateExpenseDto } from './dto/create-expense.dto'
 import { UpdateExpenseDto } from './dto/update-expense.dto'
@@ -45,7 +46,6 @@ export class ExpenseService {
   }
 
   update(id: number, updateExpenseDto: UpdateExpenseDto) {
-    console.log(updateExpenseDto)
     return `This action updates a #${id} expense`
   }
 
