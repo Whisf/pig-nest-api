@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { CategoryExpense, ExpenseToday } from 'src/entities'
+import { CategoryExpense, ExpenseToday, User } from 'src/entities'
 
 import { Connection } from 'typeorm'
 import { CreateExpenseDto } from './dto/create-expense.dto'
@@ -8,8 +8,9 @@ import { UpdateExpenseDto } from './dto/update-expense.dto'
 @Injectable()
 export class ExpenseService {
   constructor(private connection: Connection) {}
-  async create(createExpenseDto: CreateExpenseDto) {
+  async create(createExpenseDto: CreateExpenseDto, user: string) {
     return await this.connection.transaction(async (manager) => {
+      const existingUser = await manager.findOne(User, { where: { email: user } })
       const { category, ...rest } = createExpenseDto
       let existingCategory = await manager.findOne(CategoryExpense, { where: { title: createExpenseDto.category } })
       if (!existingCategory) {
@@ -18,6 +19,7 @@ export class ExpenseService {
       return await manager.save(ExpenseToday, {
         ...rest,
         category: { id: existingCategory.id },
+        user: { id: existingUser.id },
       })
     })
   }
