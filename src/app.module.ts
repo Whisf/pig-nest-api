@@ -24,7 +24,7 @@ import { ExpenseModule } from './expense/expense.module'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes({
-      path: '/something',
+      path: '*',
       method: RequestMethod.ALL,
     })
   }

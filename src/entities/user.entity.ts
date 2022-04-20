@@ -14,7 +14,7 @@ export class User extends Base {
   constructor() {
     super()
   }
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   public username: string
 
   @Column({ nullable: false })

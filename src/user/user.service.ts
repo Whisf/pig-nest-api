@@ -7,14 +7,15 @@ import { UpdateUserDto } from './dto/update-user.dto'
 @Injectable()
 export class UserService {
   constructor(private connection: Connection) {}
-  async create(createUserDto: CreateUserDto) {
-    const { username, isAvaiable } = createUserDto
-    const user = await this.connection.manager.findOne(User, { where: { username: username } })
+  async create(createUserDto: CreateUserDto, email: string) {
+    const { isAvaiable } = createUserDto
+    const user = await this.connection.manager.findOne(User, { where: { email: email } })
     if (user) {
       throw new BadRequestException('User is already existed')
     }
     return await this.connection.manager.save(User, {
-      username: username,
+      username: createUserDto?.username,
+      email: email,
       isAvaiable: isAvaiable,
     })
   }
@@ -35,7 +36,7 @@ export class UserService {
     }
 
     return await this.connection.manager.save(User, {
-      id: existingUser?.id,
+      id: id,
       username: username ? username : existingUser.username,
       isAvaiable: isAvaiable ? isAvaiable : existingUser.isAvaiable,
     })
