@@ -7,7 +7,7 @@ import { UpdateExpenseDto } from './dto/update-expense.dto'
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
-  @Post('/create')
+  @Post()
   create(@Body() createExpenseDto: CreateExpenseDto, @Req() user: any) {
     return this.expenseService.create(createExpenseDto, user.user['email'])
   }

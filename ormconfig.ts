@@ -13,9 +13,9 @@ module.exports = {
     entitiesDir: 'src/**/*.entity{.ts,.js}',
     migrationsDir: 'src/migration',
   },
-  // ssl: !process.env.ENV
-  //   ? {
-  //       rejectUnauthorized: false,
-  //     }
-  //   : undefined,
+  ssl: !process.env.ENV
+    ? {
+        rejectUnauthorized: false,
+      }
+    : undefined,
 }
