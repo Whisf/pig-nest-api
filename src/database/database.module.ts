@@ -17,11 +17,11 @@ import { TypeOrmModule } from '@nestjs/typeorm'
           database: configService.get<string>('DB_NAME'),
           entities: [__dirname + '/../**/*.entity.js'],
           synchronize: false,
-          ssl: !process.env.ENV
-            ? {
-                rejectUnauthorized: false,
-              }
-            : undefined,
+          // ssl: !process.env.ENV
+          //   ? {
+          //       rejectUnauthorized: false,
+          //     }
+          //   : undefined,
         }
       },
     }),
