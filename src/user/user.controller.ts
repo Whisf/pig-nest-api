@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Query } from '@nestjs/common'
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -11,6 +11,11 @@ export class UserController {
   create(@Body() createUserDto: CreateUserDto, @Req() user: any) {
     console.log(createUserDto)
     return this.userService.create(createUserDto, user.user['email'])
+  }
+
+  @Post('/upload')
+  uploadImage(@Body() image: any, @Req() user: any) {
+    return this.userService.upload(user.user['email'], image)
   }
 
   @Get()

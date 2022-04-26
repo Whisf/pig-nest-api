@@ -21,11 +21,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@firebase/app": "^0.7.21",
+    "@firebase/auth": "^0.19.12",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.0.0",
     "@nestjs/core": "^8.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/schedule": "^1.1.0",
     "@nestjs/typeorm": "^8.0.3",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.0",
@@ -43,6 +46,7 @@
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
+    "@types/cron": "^1.7.3",
     "@types/express": "^4.17.13",
     "@types/jest": "27.4.1",
     "@types/node": "^16.0.0",

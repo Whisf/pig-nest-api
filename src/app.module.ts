@@ -8,10 +8,12 @@ import { DatabaseModule } from './database'
 import { UserModule } from './user/user.module'
 import { TaskModule } from './task/task.module'
 import { ExpenseModule } from './expense/expense.module'
+import { ScheduleModule } from '@nestjs/schedule'
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([]),
     DatabaseModule,
     UserModule,

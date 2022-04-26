@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from 'typeorm'
 import { Base } from './common/base'
+import { ExpenseMonthly } from './expense-monthly.entity'
 import { ExpenseToday } from './expense-today.entity'
 import { TaskResult } from './task-result.entity'
 import { Task } from './task.entity'
@@ -23,6 +24,9 @@ export class User extends Base {
   @Column({ default: true })
   public isAvaiable: boolean
 
+  // @Column('enum')
+  // public role: 'ADMIN' | 'User'
+
   @TreeParent({ onDelete: 'SET NULL' })
   public parent: User
 
@@ -37,4 +41,7 @@ export class User extends Base {
 
   @OneToMany(() => ExpenseToday, (expenseToday: ExpenseToday) => expenseToday.user)
   public expenseToday: ExpenseToday
+
+  @OneToMany(() => ExpenseMonthly, (expenseMonthly: ExpenseMonthly) => expenseMonthly.user)
+  public expenseMonthly: ExpenseMonthly
 }

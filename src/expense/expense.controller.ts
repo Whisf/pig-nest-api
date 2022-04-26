@@ -18,12 +18,12 @@ export class ExpenseController {
   }
 
   @Get()
-  findAll() {
-    return this.expenseService.findAll()
+  findAll(@Req() user: any) {
+    return this.expenseService.findAll(user.user['email'])
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.expenseService.findExpenseWithCategory(+id)
   }
 

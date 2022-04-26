@@ -29,7 +29,6 @@ export class AuthMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: any) {
     const token = req.headers.authorization
-    // console.log(token)
     if (token != null && token != '') {
       this.defaultApp
         .auth()

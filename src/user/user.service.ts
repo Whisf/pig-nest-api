@@ -42,6 +42,12 @@ export class UserService {
     })
   }
 
+  async upload(userEmail, image): Promise<User> {
+    return this.connection.manager.save(User, {
+      email: userEmail,
+    })
+  }
+
   async remove(id: number) {
     const existingUser = await this.findOne(id)
     if (!existingUser) {
