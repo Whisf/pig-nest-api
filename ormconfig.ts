@@ -1,5 +1,5 @@
 module.exports = {
-  type: 'mysql',
+  type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: process.env.DB_PORT || 3306,
   username: process.env.DB_USERNAME || 'root',
@@ -13,4 +13,9 @@ module.exports = {
     entitiesDir: 'src/**/*.entity{.ts,.js}',
     migrationsDir: 'src/migration',
   },
+  // ssl: !process.env.ENV
+  //   ? {
+  //       rejectUnauthorized: false,
+  //     }
+  //   : undefined,
 }

@@ -8,10 +8,12 @@ import { DatabaseModule } from './database'
 import { UserModule } from './user/user.module'
 import { TaskModule } from './task/task.module'
 import { ExpenseModule } from './expense/expense.module'
+import { ScheduleModule } from '@nestjs/schedule'
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([]),
     DatabaseModule,
     UserModule,
@@ -24,7 +26,7 @@ import { ExpenseModule } from './expense/expense.module'
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes({
-      path: '/something',
+      path: '*',
       method: RequestMethod.ALL,
     })
   }

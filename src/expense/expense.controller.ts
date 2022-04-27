@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common'
 import { ExpenseService } from './expense.service'
 import { CreateExpenseDto } from './dto/create-expense.dto'
 import { UpdateExpenseDto } from './dto/update-expense.dto'
@@ -7,9 +7,9 @@ import { UpdateExpenseDto } from './dto/update-expense.dto'
 export class ExpenseController {
   constructor(private readonly expenseService: ExpenseService) {}
 
-  @Post('/create')
-  create(@Body() createExpenseDto: CreateExpenseDto) {
-    return this.expenseService.create(createExpenseDto)
+  @Post()
+  create(@Body() createExpenseDto: CreateExpenseDto, @Req() user: any) {
+    return this.expenseService.create(createExpenseDto, user.user['email'])
   }
 
   @Post('/category')
@@ -18,12 +18,12 @@ export class ExpenseController {
   }
 
   @Get()
-  findAll() {
-    return this.expenseService.findAll()
+  findAll(@Req() user: any) {
+    return this.expenseService.findAll(user.user['email'])
   }
 
   @Get('/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.expenseService.findExpenseWithCategory(+id)
   }
 

@@ -1,7 +1,7 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response } from 'express';
-import * as firebase from 'firebase-admin';
-import * as serviceAccount from './firebaseServiceAccount.json';
+import { Injectable, NestMiddleware } from '@nestjs/common'
+import { Request, Response } from 'express'
+import * as firebase from 'firebase-admin'
+import * as serviceAccount from './firebaseServiceAccount.json'
 
 const firebase_params = {
   type: serviceAccount.type,
@@ -14,41 +14,38 @@ const firebase_params = {
   tokenUri: serviceAccount.token_uri,
   authProviderX509CertUrl: serviceAccount.auth_provider_x509_cert_url,
   clientC509CertUrl: serviceAccount.client_x509_cert_url,
-};
+}
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  private defaultApp: any;
+  private defaultApp: any
 
   constructor() {
     this.defaultApp = firebase.initializeApp({
       credential: firebase.credential.cert(firebase_params),
       databaseURL: 'https://fir-auth-bd895.firebaseio.com',
-    });
+    })
   }
 
   use(req: Request, res: Response, next: any) {
-    const token = req.headers.authorization;
-    // console.log(token)
+    const token = req.headers.authorization
     if (token != null && token != '') {
       this.defaultApp
         .auth()
         .verifyIdToken(token.replace('Bearer ', ''))
         .then(async (decodedToken) => {
-          // console.log(decodedToken)
           const user = {
             email: decodedToken.email,
-          };
-          req['user'] = user;
-          console.log(user);
-          next();
+          }
+          req['user'] = user
+          next()
         })
         .catch((error) => {
-          console.error(error);
-          this.accessDenied(req.url, res);
-        });
+          console.error(error)
+          this.accessDenied(req.url, res)
+        })
     } else {
-      next();
+      next()
     }
   }
 
@@ -58,6 +55,6 @@ export class AuthMiddleware implements NestMiddleware {
       timestamp: new Date().toISOString(),
       path: url,
       message: 'Access Denied',
-    });
+    })
   }
 }
